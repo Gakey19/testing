@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>黄雅馨 - 个人作品集</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  :root {
+    --blush: #e9cfc4;
+    --chocolate: #472825;
+    --cream: #faf6f3;
+    --line: #472825;
+    --btn-red: #d8b8af;
+  }
+
+  body {
+    background-color: var(--cream);
+    color: var(--chocolate);
+    font-family: "PingFang SC", "Microsoft Yahei", -apple-system, serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  #scroll-shine {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    background: radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,0.22) 0%, transparent 35%);
+    opacity: 0;
+    transition: opacity 0.22s ease-out;
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 24px 40px;
+    background-color: var(--cream);
+    z-index: 999;
+  }
+
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 32px;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .nav-inner a {
+    text-decoration: none;
+    color: var(--chocolate);
+    font-size: 15px;
+    letter-spacing: 0.5px;
+    transition: opacity 0.25s ease;
+  }
+
+  .nav-inner a:hover {
+    opacity: 0.55;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 120px 40px 80px;
+  }
+
+  .header-card {
+    background-color: var(--blush);
+    padding: 60px 50px;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-bottom: 48px;
+    opacity: 0;
+    transform: translateY(32px);
+    transition: 0.8s ease;
+  }
+
+  .header-card.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .avatar-box {
+    width: 220px;
+    height: 280px;
+    overflow: hidden;
+    border: 2px solid #fff;
+  }
+
+  .avatar-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .info h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 48px;
+    font-weight: 600;
+    color: var(--chocolate);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .info p {
+    font-size: 16px;
+    margin: 8px 0;
+  }
+
+  section {
+    margin-bottom: 48px;
+    padding: 48px;
+    background: #ffffff;
+    border-top: 1px solid var(--line);
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.75s ease, transform 0.75s ease;
+  }
+
+  section.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  section h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--chocolate);
+    margin-bottom: 24px;
+  }
+
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .skill-tag {
+    padding: 10px 20px;
+    background-color: var(--blush);
+    color: var(--chocolate);
+    font-size: 14px;
+    letter-spacing: 0.4px;
+    transition: 0.3s ease;
+  }
+
+  .skill-tag:hover {
+    background-color: var(--chocolate);
+    color: #fff;
+  }
+
+  .project-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px;
+  }
+
+  .project-card {
+    background: #fff;
+    border: 1px solid var(--blush);
+    transition: all 0.35s ease;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 12px 28px rgba(71,40,37,0.08);
+  }
+
+  .card-body {
+    padding: 28px;
+  }
+
+  .project-card h3 {
+    font-family: Georgia, serif;
+    font-size: 24px;
+    margin-bottom: 12px;
+    color: var(--chocolate);
+  }
+
+  .project-card p {
+    font-size: 15px;
+    color: #554442;
+  }
+
+  .img-text-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    align-items: center;
+    margin: 16px 0;
+  }
+
+  .img-text-row img {
+    width: 100%;
+  }
+
+  .text-side {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-link a {
+    display: inline-block;
+    background: var(--btn-red);
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: 0.25s ease;
+  }
+
+  .btn-link a::before {
+    content: "👉 ";
+  }
+
+  .btn-link a:hover {
+    opacity: 0.82;
+  }
+
+  .btn-link {
+    margin-top: 16px;
+  }
+
+  /* 团队项目 */
+  #team-project {
+    margin-top: 100px;
+    margin-bottom: 100px;
+    padding-top: 60px;
+    padding-bottom: 120px;
+  }
+
+  .team-card {
+    margin-top: 40px;
+    padding-bottom: 40px;
+  }
+
+  .team-card .card-body {
+    padding-bottom: 20px;
+  }
+
+  .team-data {
+    margin-bottom:0;
+  }
+
+  .work-wrap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .work-card {
+    background: #fff;
+    border: 1px solid var(--blush);
+    padding: 24px;
+    transition: 0.35s ease;
+  }
+
+  .work-card:hover {
+    box-shadow: 0 12px 28px rgba(71,40,37,0.08);
+  }
+
+  .work-card img {
+    width: 100%;
+    margin-bottom: 14px;
+  }
+
+  .triple-img-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .triple-img-row img {
+    width: 100%;
+    border-radius: 6px;
+  }
+
+  .photo-mix-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .photo-item-169 {
+    height: 200px;
+    overflow: hidden;
+  }
+
+  .photo-item-169 img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .photo-item-916 {
+    height: 340px;
+    overflow: hidden;
+    background: #f1ecea;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .photo-item-916 img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: transform 0.4s ease;
+  }
+
+  .photo-mix-grid div:hover img {
+    transform: scale(1.05);
+  }
+
+  footer {
+    padding: 40px;
+    background-color: var(--blush);
+    text-align: center;
+    color: var(--chocolate);
+    font-size: 14px;
+    margin-top: 60px;
+  }
+
+  @media (max-width: 900px) {
+    .work-wrap {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header-card {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding: 40px 24px;
+    }
+
+    .avatar-box {
+      margin: 0 auto;
+    }
+
+    .info h1 {
+      font-size: 36px;
+    }
+
+    nav {
+      padding: 16px 20px;
+    }
+
+    .nav-inner {
+      gap: 16px;
+    }
+
+    .container {
+      padding: 100px 20px 40px;
+    }
+
+    section {
+      padding: 28px 20px;
+    }
+
+    .img-text-row {
+      grid-template-columns: 1fr;
+    }
+
+    .triple-img-row {
+      grid-template-columns: 1fr;
+    }
+
+    .photo-mix-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .photo-item-916 {
+      height: auto;
+      min-height: 260px;
+    }
+
+    #team-project {
+      margin-top: 60px;
+      margin-bottom: 60px;
+      padding-top: 40px;
+      padding-bottom: 80px;
+    }
+  }
+</style>
+</head>
+
+<body>
+<div id="scroll-shine"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#about">关于我</a>
+    <a href="#skill">个人技能</a>
+    <a href="#personal-account">个人账号</a>
+    <a href="#team-project">团队项目</a>
+    <a href="#tiktok">TikTok实习</a>
+    <a href="#kol">KOL营销</a>
+    <a href="#photo">摄影作品</a>
+  </div>
+</nav>
+
+<div class="container">
+  <div id="about" class="header-card">
+    <div class="avatar-box">
+      <img src="grad.jpg" alt="黄雅馨毕业照">
+    </div>
+    <div class="info">
+      <h1>黄雅馨</h1>
+      <p>香港中文大学｜日本研究｜2026年11月毕业</p>
+      <p>📞 电话：15059796358</p>
+      <p>📧 邮箱：2531223439@qq.com</p>
+      <p style="margin-top:10px;">以异文化视角，解锁创意世界</p>
+    </div>
+  </div>
+
+  <section id="skill">
+    <h2>个人技能</h2>
+    <div class="skill-list">
+      <span class="skill-tag">账号运营</span>
+      <span class="skill-tag">AIGC</span>
+      <span class="skill-tag">视频剪辑</span>
+      <span class="skill-tag">图文排版</span>
+      <span class="skill-tag">KOL营销</span>
+      <span class="skill-tag">中英日语翻译</span>
+      <span class="skill-tag">跨文化沟通</span>
+      <span class="skill-tag">数据分析</span>
+    </div>
+  </section>
+
+  <section id="personal-account">
+    <h2>个人账号 @一颗黄豆gakey</h2>
+    <div class="project-wrap">
+      <div class="project-card">
+        <div class="card-body">
+          <h3>抖音账号</h3>
+          <div class="img-text-row">
+            <img src="douyin.jpg" alt="抖音账号截图">
+            <div class="text-side">
+              <p>内容方向：美食探店、留学Vlog、港硕申请攻略</p>
+              <p>粉丝：<strong>138</strong>，获赞：<strong>6000+</strong></p>
+              <div class="btn-link">
+                <a href="https://v.douyin.com/NNowc3N_JVA/" target="_blank">访问抖音账号</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-card">
+        <div class="card-body">
+          <h3>小红书账号</h3>
+          <div class="img-text-row">
+            <img src="xiaohongshu.jpg" alt="小红书账号截图">
+            <div class="text-side">
+              <p>内容方向：Vlog、美食探店</p>
+              <p>粉丝：<strong>202</strong>，获赞：<strong>1500+</strong></p>
+              <div class="btn-link">
+                <a href="https://xhslink.cn/o/4hQbJ1qgYtA" target="_blank">访问小红书账号</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team-project">
+    <h2>团队项目：DUNHUANG画说</h2>
+    <div class="project-card team-card">
+      <div class="card-body">
+        <h3 style="font-size:28px;"><strong>项目负责人</strong></h3>
+        <p style="margin-bottom:14px;">账号统筹运营，日语翻译、视频剪辑、图文内容制作</p>
+
+        <div class="triple-img-row">
+          <img src="dunhuang_1.jpg" alt="敦煌截图1">
+          <img src="dunhuang_2.jpg" alt="敦煌截图2">
+          <img src="dunhuang_3.jpg" alt="敦煌截图3">
+        </div>
+
+        <p>以短视频与图文为媒介，运用<strong>中、英、德、日</strong>四种语言，向世界传递敦煌壁画文化之美</p>
+
+        <p class="team-data" style="margin-top:12px;">
+          粉丝<strong>537</strong>，获赞收藏<strong>2176</strong>；产出日语版壁画视频和图文<strong>20篇</strong>
+        </p>
+        <!-- 按钮直接放在文字下方 -->
+        <div class="btn-link">
+          <a href="https://xhslink.cn/o/3bd81lXsV2O" target="_blank">访问项目账号</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tiktok">
+    <h2>实习｜TikTok账号运营</h2>
+    <div class="work-wrap">
+      <div class="work-card">
+        <img src="tiktok_work1.jpg" alt="TikTok作品1">
+        <p>Vlog 开头剪辑技巧教程</p>
+        <p>累计播放 <strong>53.2 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://vt.tiktok.com/ZSbdXH1Kn/">访问作品</a>
+        </div>
+      </div>
+      <div class="work-card">
+        <img src="tiktok_work2.jpg" alt="TikTok作品2">
+        <p>BabyDance AI 模型实操教学视频</p>
+        <p>累计播放 <strong>55.2 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://vt.tiktok.com/ZSbdXyaTb/">访问作品</a>
+        </div>
+      </div>
+      <div class="work-card">
+        <img src="tiktok_work3.jpg" alt="TikTok作品3">
+        <p>AIGC 提示词训练与创意产出</p>
+        <p>累计播放 <strong>16.9 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://vt.tiktok.com/ZSbd4khAh/">访问作品</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kol">
+    <h2>KOL营销</h2>
+    <div class="work-wrap">
+      <div class="work-card">
+        <img src="kol_work1.jpg" alt="KOL作品1">
+        <p>综艺感猫咪POV视角</p>
+        <p>累计播放 <strong>151 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://www.instagram.com/reel/DcvS2OhTDv5/">访问作品</a>
+        </div>
+      </div>
+      <div class="work-card">
+        <img src="kol_work2.jpg" alt="KOL作品2">
+        <p>360 全景相机创意实拍</p>
+        <p>累计播放 <strong>3.4 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://www.instagram.com/reel/DdFVW4pzO8O/">访问作品</a>
+        </div>
+      </div>
+      <div class="work-card">
+        <img src="kol_work3.jpg" alt="KOL作品3">
+        <p>保姆级 Snap 自拍屏使用教程</p>
+        <p>累计播放 <strong>13.3 万次</strong></p>
+        <div class="btn-link">
+          <a target="_blank" href="https://www.instagram.com/reel/Daz2Zb7z9Ue/">访问作品</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="photo">
+    <h2>摄影作品</h2>
+    <div class="photo-mix-grid">
+      <div class="photo-item-169"><img src="photo_16_9_1.jpg" alt="摄影"></div>
+      <div class="photo-item-169"><img src="photo_16_9_2.jpg" alt="摄影"></div>
+      <div class="photo-item-169"><img src="photo_16_9_3.jpg" alt="摄影"></div>
+      <div class="photo-item-916"><img src="photo_9_16_1.jpg" alt="摄影"></div>
+      <div class="photo-item-916"><img src="photo_9_16_2.jpg" alt="摄影"></div>
+      <div class="photo-item-916"><img src="photo_9_16_3.jpg" alt="摄影"></div>
+    </div>
+  </section>
+</div>
+
+<footer>
+© 2026 黄雅馨 个人作品集
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(item => {
+      if (item.isIntersecting) {
+        item.target.classList.add('show');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('section, .header-card').forEach(el => {
+    observer.observe(el);
+  });
+
+  let audioCtx = null;
+  let soundReady = false;
+  const shineLayer = document.getElementById('scroll-shine');
+
+  function initAudio() {
+    if (!soundReady) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      soundReady = true;
+    }
+  }
+
+  function playScrollSound() {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "sine";
+    osc.frequency.value = 1200;
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.014, audioCtx.currentTime + 0.001);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.07);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.07);
+  }
+
+  function playClickSound() {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = "triangle";
+    osc.frequency.value = 720;
+    gain.gain.setValueAtTime(0, audioCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(0.022, audioCtx.currentTime + 0.001);
+    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.09);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.09);
+  }
+
+  document.body.addEventListener('click', () => {
+    initAudio();
+    playClickSound();
+  });
+
+  let scrollTimer = null;
+  window.addEventListener('scroll', (e) => {
+    const y = window.scrollY + window.innerHeight / 2;
+    const x = window.innerWidth / 2;
+    shineLayer.style.setProperty('--x', x + 'px');
+    shineLayer.style.setProperty('--y', y + 'px');
+    shineLayer.style.opacity = '1';
+
+    if (soundReady) playScrollSound();
+
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(() => {
+      shineLayer.style.opacity = '0';
+    }, 120);
+  }, { passive: true });
+</script>
+</body>
+</html>
